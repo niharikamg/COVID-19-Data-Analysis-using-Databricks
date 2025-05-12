@@ -61,7 +61,7 @@ This was a great hands-on experience combining data cleaning, transformation, an
 
 **Niharika MG**  
 Data Science • Python • PySpark • Visualization  
-Reach me: mgniharikaa@gmail..com
+Reach me: mgniharikaa@gmail.com
 Let's connect!
 
 ---
