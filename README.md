@@ -1,102 +1,71 @@
-# COVID-19 Data Analysis using Databricks
+# 🦠 COVID-19 Vaccination vs Mortality – Global Analysis using Databricks (by Niharika MG)
 
-## Overview
-This project explores the relationship between **COVID-19 vaccination rates, case rates, and mortality** across continents using **Databricks and PySpark**. The analysis uses data from **Our World in Data** and aims to determine whether higher vaccination rates correlate with lower COVID-19 cases and mortality.
+Hey there! 👋 I’m Niharika MG, and this is a data science project where I explore how COVID-19 vaccination rates impacted new cases and excess mortality across continents. I used **Databricks**, **PySpark**, and **Pandas**, combining datasets from **Our World in Data**, the **World Bank**, and **Wikipedia**.
 
-## Technologies Used
-- **Databricks** (Cloud-based big data analysis)
-- **PySpark** (Distributed data processing)
-- **Pandas** (Data manipulation and analysis)
-- **Data Sources**: Our World in Data, World Bank, Wikipedia
+Let’s find out: Did more vaccines really mean fewer cases and deaths?
 
 ---
 
-## Setup Instructions
-### 1. Set Up Databricks
-1. **Create a Free Databricks Account**
-   - Sign up for [Databricks Community Edition](https://databricks.com/product/faq/community-edition) or start a [Databricks Free Trial](https://docs.databricks.com/en/getting-started/free-trial.html).
-2. **Launch Databricks and Create a New Cluster**
-   - Select an appropriate runtime (recommended: **Databricks Runtime 10.4 LTS**).
-3. **Upload Dataset**
-   - Download the **OWID_COVID19_data_4_Project5.csv** file and upload it to **DBFS (Databricks File System)**.
+## 🔍 What I Did
 
-### 2. Load & Explore Data
-```python
-from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName("COVID Analysis").getOrCreate()
-
-df = spark.read.format("csv") \
-    .option("header", "true") \
-    .option("inferSchema", "true") \
-    .load("dbfs:/FileStore/OWID_COVID19_data_4_Project5.csv")
-
-display(df)
-```
-
-### 3. Data Cleaning & Filtering
-```python
-from pyspark.sql.functions import col
-
-df = df.filter((col('people_fully_vaccinated_per_hundred') > 0) & (col('new_cases_per_million') > 0))
-display(df)
-```
-
-### 4. Extract Month & Year
-```python
-from pyspark.sql.functions import month, year
-
-df = df.withColumn("month", month("date"))
-df = df.withColumn("year", year("date"))
-
-df = df.filter((df["year"] == 2021) & (df["month"].isin([9, 10])))
-```
-
-### 5. Calculate Averages per Continent
-```python
-from pyspark.sql.functions import avg
-
-avg_df = df.groupBy("continent", "month").agg(
-    avg("people_fully_vaccinated_per_hundred").alias("avg_vaccination"),
-    avg("new_cases_per_million").alias("avg_new_cases"),
-    avg("excess_mortality").alias("avg_excess_mortality")
-)
-display(avg_df)
-```
-
-### 6. Visualization
-- Use **Databricks' built-in plotting tools**:
-```python
-display(avg_df.orderBy("continent", "month"))
-```
-
-### 7. Correlation Analysis
-```python
-correlation = avg_df.stat.corr("avg_vaccination", "avg_new_cases")
-print("Correlation:", correlation)
-```
-
-### 8. Generate Summary Statistics
-```python
-summary = avg_df.describe()
-display(summary)
-```
-
-### 9. Reporting Findings
-- **Interpret the correlation and trends between vaccination rates, new cases, and mortality.**
-- **Summarize in a final report.**
+- Cleaned and loaded the OWID COVID dataset in Databricks.
+- Focused on **September & October 2021** – peak vaccination months.
+- Filtered out noisy or missing data for more reliable results.
+- Aggregated and analyzed metrics by **continent**.
+- Filled in missing GDP per capita data using trusted sources.
+- Ran **correlation analysis** between:
+  - Vaccination % vs New COVID cases  
+  - Vaccination % vs Excess Mortality
+- Visualized everything using Databricks' built-in chart tools.
 
 ---
 
-## Submission
-Submit **two files** named after your email username:
-1. **Results Screenshot File** (e.g., `yourname_results.doc`)
-2. **Databricks Notebook File** (e.g., `yourname_project5.dbc`)
-University Of Cincinnati 
+## 🧪 Tools Used
+
+- Databricks (Community Edition)
+- PySpark & Pandas
+- DBFS (Databricks File System)
+- Our World in Data CSV
+- World Bank GDP data
+- Wikipedia (for backup GDP info)
 
 ---
 
-## Conclusion
-By following this guide, you will successfully **analyze COVID-19 trends using Databricks and PySpark**, gaining insights into the impact of vaccinations on case rates and mortality.
+## 📊 Key Findings
 
-🚀 Happy Analyzing!
+> 🌍 Continents with **higher vaccination rates** (especially in October 2021) showed **lower new case rates** and **reduced excess mortality**.
 
+- **Africa** lagged in vaccination and had more case spikes.
+- **Europe** and **North America** showed higher vaccination + better outcomes.
+- There’s a **moderate negative correlation** between vaccines and cases.
+- Visualizations make this super clear — check the plots in my notebook!
+
+---
+
+## 📚 Data Sources
+
+- OWID: [https://ourworldindata.org/covid-vaccinations](https://ourworldindata.org/covid-vaccinations)
+- World Bank: [https://data.worldbank.org](https://data.worldbank.org)
+- Wikipedia: [GDP (PPP) by country](https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita)
+
+---
+
+## 📝 Final Thoughts
+
+Data doesn’t lie — vaccines *did* help reduce both cases and excess deaths. 📉  
+This was a great hands-on experience combining data cleaning, transformation, analysis, and storytelling using Databricks.
+
+---
+
+## 🙋‍♀️ About Me
+
+**Niharika MG**  
+Data Science • Python • PySpark • Visualization  
+Reach me: mgniharikaa@gmail..com
+Let's connect!
+
+---
+
+## 🛑 License
+
+Educational use only. Attribution appreciated 😊
